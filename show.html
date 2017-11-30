@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Inteligencia Artificial</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+      #map {
+        height: 600px;
+        width: 100%;
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Inteligencia Artificial - CICESE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Inicio
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <!--<h1 class="mt-5">Proyecto Final</h1>--><br>
+          <p class="lead">Optimización de posicionamiento de franquicias mediante el desarrollo de algoritmos genéticos</p><br>
+          <ul class="list-unstyled">
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+    <script>
+
+        function grid(latitude, longitude){
+            var lat_space = 0.00451043715;
+            var lon_space = 0.00526486588;
+            var poi = [31.863753, -116.621008];
+            var locs = new Array(49);
+
+            locs = [  //Modificar esto
+                [latitude + (3*(lat_space)), longitude - (3*(lon_space))], //0
+                [latitude + (3*(lat_space)), longitude - (2*(lon_space))],
+                [latitude + (3*(lat_space)), longitude - (1*(lon_space))],
+                [latitude + (3*(lat_space)), longitude],
+                [latitude + (3*(lat_space)), longitude + (1*(lon_space))],
+                [latitude + (3*(lat_space)), longitude + (2*(lon_space))],
+                [latitude + (3*(lat_space)), longitude + (3*(lon_space))],
+                [latitude + (2*(lat_space)), longitude - (3*(lon_space))], //7
+                [latitude + (2*(lat_space)), longitude - (2*(lon_space))],
+                [latitude + (2*(lat_space)), longitude - (1*(lon_space))],
+                [latitude + (2*(lat_space)), longitude],
+                [latitude + (2*(lat_space)), longitude + (1*(lon_space))],
+                [latitude + (2*(lat_space)), longitude + (2*(lon_space))],
+                [latitude + (2*(lat_space)), longitude + (3*(lon_space))],
+                [latitude + (1*(lat_space)), longitude - (3*(lon_space))], //14
+                [latitude + (1*(lat_space)), longitude - (2*(lon_space))],
+                [latitude + (1*(lat_space)), longitude - (1*(lon_space))],
+                [latitude + (1*(lat_space)), longitude],
+                [latitude + (1*(lat_space)), longitude + (1*(lon_space))],
+                [latitude + (1*(lat_space)), longitude + (2*(lon_space))],
+                [latitude + (1*(lat_space)), longitude + (3*(lon_space))],
+                [latitude, longitude - (3*(lon_space))], //21
+                [latitude, longitude - (2*(lon_space))],
+                [latitude, longitude - (1*(lon_space))],
+                [latitude, longitude],
+                [latitude, longitude + (1*(lon_space))],
+                [latitude, longitude + (2*(lon_space))],
+                [latitude, longitude + (3*(lon_space))],
+                [latitude - (1*(lat_space)), longitude - (3*(lon_space))], //28
+                [latitude - (1*(lat_space)), longitude - (2*(lon_space))],
+                [latitude - (1*(lat_space)), longitude - (1*(lon_space))],
+                [latitude - (1*(lat_space)), longitude],
+                [latitude - (1*(lat_space)), longitude + (1*(lon_space))],
+                [latitude - (1*(lat_space)), longitude + (2*(lon_space))],
+                [latitude - (1*(lat_space)), longitude + (3*(lon_space))],
+                [latitude - (2*(lat_space)), longitude - (3*(lon_space))], //35
+                [latitude - (2*(lat_space)), longitude - (2*(lon_space))],
+                [latitude - (2*(lat_space)), longitude - (1*(lon_space))],
+                [latitude - (2*(lat_space)), longitude],
+                [latitude - (2*(lat_space)), longitude + (1*(lon_space))],
+                [latitude - (2*(lat_space)), longitude + (2*(lon_space))],
+                [latitude - (2*(lat_space)), longitude + (3*(lon_space))],
+                [latitude - (3*(lat_space)), longitude - (3*(lon_space))], //42
+                [latitude - (3*(lat_space)), longitude - (2*(lon_space))],
+                [latitude - (3*(lat_space)), longitude - (1*(lon_space))],
+                [latitude - (3*(lat_space)), longitude],
+                [latitude - (3*(lat_space)), longitude + (1*(lon_space))],
+                [latitude - (3*(lat_space)), longitude + (2*(lon_space))],
+                [latitude - (3*(lat_space)), longitude + (3*(lon_space))], //49
+            ];
+
+            return locs;
+        }
+
+        function initMap() {
+            var uluru = {lat: 31.868341, lng: -116.621046};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: uluru
+            });
+            var flag = false;
+
+            //Add listener
+            map.addListener('click', function (event) {
+                var latitude = event.latLng.lat();
+                var longitude = event.latLng.lng();
+
+                locations = grid(latitude, longitude);
+
+                console.log( latitude + ', ' + longitude );
+
+                if (!flag){
+                    radius = new google.maps.Circle({map: map,
+                        radius: 2121.32,
+                        center: event.latLng,
+                        fillColor: '#777',
+                        fillOpacity: 0.1,
+                        strokeColor: '#AA0000',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        draggable: false,    // Dragable
+                        editable: false      // Resizable
+                    });
+                    map.panTo(new google.maps.LatLng(latitude,longitude));
+
+                    function placeMarkerAndPanTo(latLng, map) {
+                        var marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map
+                        });
+                        map.panTo(latLng);
+                    }
+
+                    for (var i = 0; i < locations.length; i++){
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+                            map: map,
+                            icon: {
+                                path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                                scale: 2
+                            }
+                        });
+                    }
+                    flag = true;
+                }
+
+                // Center of map
+
+
+            }); //end addListener
+
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo8lBF4UqiDq-nLxpKUQkyOhdOLMD9a4U&callback=initMap">
+    </script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  </body>
+
+</html>
