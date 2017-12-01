@@ -39,11 +39,11 @@
       var service;
       var latitudes = [];
       var longitudes = [];
+      var distances = [];
       var i=0;
       function grid(latitude, longitude){
           var lat_space = 0.00451043715;
           var lon_space = 0.00526486588;
-          var poi = [31.863753, -116.621008];
           var locs = new Array(49);
 
           locs = [  //Modificar esto
@@ -95,7 +95,7 @@
               [latitude - (3*(lat_space)), longitude],
               [latitude - (3*(lat_space)), longitude + (1*(lon_space))],
               [latitude - (3*(lat_space)), longitude + (2*(lon_space))],
-              [latitude - (3*(lat_space)), longitude + (3*(lon_space))], //49
+              [latitude - (3*(lat_space)), longitude + (3*(lon_space))], //48
           ];
 
           return locs;
@@ -167,7 +167,7 @@
       function performSearch() {
           var request = {
               bounds: map.getBounds(),
-              keyword: 'hamburguers'
+              keyword: 'beer'
           };
           service.radarSearch(request, callback);
       }
@@ -187,6 +187,7 @@
       function addMarker(place) {
           latitudes[i] = place.geometry.location.lat();
           longitudes[i] = place.geometry.location.lng();
+
           i++;
           var marker = new google.maps.Marker({
               map: map,
@@ -209,6 +210,73 @@
               });
           });
       }
+
+//      for (var k = 0; k < latitudes.length; k++){
+//        poi[k] = [latitudes[k], longitudes[k]];
+//      }
+
+      function haversine(lat1, lon1, lat2, lon2){
+        var R = 6372229; // m 
+        var x1 = lat2-lat1;
+        var dLat = Math.radians(x1);
+        var x2 = lon2-lon1;
+        var dLon = Math.radians(x2);  
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+          Math.cos(Math.radians(lat1)) * Math.cos(Math.radians(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2);  
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c;
+
+        return d;
+       }
+
+       function classifier(){
+        var reference = [latitude, longitude];
+
+        for (var k = 0; k < latitudes.length; k++){
+          var flag2 = false;
+          var pos_tmp = 4;
+          var pos_tmp2 = 4;
+          var pos = 24;
+          while (pos_tmp > 0 && pos_tmp <= 7){
+            if (latitudes[k] > reference[0]){ //arriba
+              if(pos_tmp2!=pos_tmp){
+                  pos_tmp2 = pos_tmp;
+                  pos_tmp--;
+                   reference = [locs[pos - 7][0], locs[pos - 7][1]];
+              }else{
+                classifier_column(pos_tmp);
+              }
+
+             
+             
+//              if (longitudes[k] < reference[1]){ //izquierda
+//              }
+//              else if (longitudes[k] > reference[1]){  //derecha
+//              }
+            } else{  //abajo
+
+              if(pos_tmp2!=pos_tmp){
+                  pos_tmp2 = pos_tmp;
+                  pos_tmp++;
+                  reference = [locs[pos + 7][0], locs[pos + 7][1]];
+              }else{
+                classifier_column(pos_tmp);
+                //return pos_tmp;
+              }
+
+              
+              
+            }
+          }
+
+        }
+       }
+       function classifier_column(reference){
+
+       }
+
+
   </script>
 </head>
 
