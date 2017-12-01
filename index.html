@@ -5,6 +5,7 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -40,7 +41,27 @@
       var latitudes = [];
       var longitudes = [];
       var distances = [];
+      var lat_general; //No borrar
+      var lng_general; //No borrar
+      var lat_spaces = 0.00451043715; //No borrar
+      var lon_spaces = 0.00526486588; //No borrar
       var i=0;
+      function generar(){
+        var uno = document.getElementById('uno').value;
+        var dos = document.getElementById('uno').value;
+        var tres = document.getElementById('uno').value;
+        var cuatro = document.getElementById('uno').value;
+        var cinco = document.getElementById('uno').value;
+        var seis = document.getElementById('uno').value;
+        /*
+          var marker1 = new google.maps.Marker({
+              position: {lat:31.8668157110540, lng:-116.61712646484375},
+              map: map
+          });*/
+       /* var array1 = document.getElementById('array1').innerHTML= arreglo_concurrencias;
+        var array2 = document.getElementById('array1').innerHTML= arreglo_distancias;*/
+
+      }
       function grid(latitude, longitude){
           var lat_space = 0.00451043715;
           var lon_space = 0.00526486588;
@@ -120,7 +141,8 @@
               var longitude = event.latLng.lng();
 
               locations = grid(latitude, longitude);
-
+              lat_general=latitude;
+              lng_general = longitude;
               console.log( latitude + ', ' + longitude );
 
               if (!flag){
@@ -241,15 +263,13 @@
           while (pos_tmp > 0 && pos_tmp <= 7){
             if (latitudes[k] > reference[0]){ //arriba
               if(pos_tmp2!=pos_tmp){
-                  pos_tmp2 = pos_tmp;
-                  pos_tmp--;
-                   reference = [locs[pos - 7][0], locs[pos - 7][1]];
+                    pos_tmp2 = pos_tmp;
+                    pos_tmp--;
+                    reference = [locs[pos - 7][0], locs[pos - 7][1]];
               }else{
                 classifier_column(pos_tmp);
               }
 
-             
-             
 //              if (longitudes[k] < reference[1]){ //izquierda
 //              }
 //              else if (longitudes[k] > reference[1]){  //derecha
@@ -262,7 +282,6 @@
                   reference = [locs[pos + 7][0], locs[pos + 7][1]];
               }else{
                 classifier_column(pos_tmp);
-                //return pos_tmp;
               }
 
               
@@ -319,6 +338,56 @@
 </div>
 
 <div id="map"></div>
+<br>
+<div class="container">
+  <p id="array1"></p>
+  <p id="array2"></p>
+  <br>
+  <h1>Controles</h1><br>
+  <div class="card card-body">
+    <h4 class="card-title">Zonas Óptimas (Genético)</h4>
+<br>
+
+      <div class="row">
+        <div class="col-lg-2">
+          <input class="form-control" id="uno" type="number" placeholder="">
+        </div>
+        <div class="col-lg-2">
+          <input class="form-control" id="dos" type="number" placeholder="">
+        </div>
+        <div class="col-lg-2">
+          <input class="form-control" id="tres" type="number" placeholder="">
+        </div>
+        <div class="col-lg-2">
+          <input class="form-control" id="cuatro" type="number" placeholder="">
+        </div>
+        <div class="col-lg-2">
+          <input class="form-control" type="number"  id="cinco" placeholder="">
+        </div>
+        <div class="col-lg-2">
+          <input class="form-control" type="number" placeholder="" id="seis">
+        </div>
+
+
+      </div><br>
+      <div class="row">
+        <div col-lg-4>
+         <div style="margin: 15px;">
+           <button type="button" class="btn btn-warning">Guardar</button>&nbsp;&nbsp;
+           <button type="button" class="btn btn-success" onclick="generar()">Cargar</button>
+         </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<br><br>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo8lBF4UqiDq-nLxpKUQkyOhdOLMD9a4U&callback=initMap&libraries=places,visualization">
 </script>
@@ -326,6 +395,7 @@
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 
