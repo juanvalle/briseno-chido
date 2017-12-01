@@ -41,6 +41,7 @@
       var latitudes = [];
       var longitudes = [];
       var distances = [];
+      var points = new Array(36);
       var lat_general; //No borrar
       var lng_general; //No borrar
       var lat_spaces = 0.00451043715; //No borrar
@@ -252,48 +253,80 @@
         return d;
        }
 
-       function classifier(){
+      function col_classifier(){
         var reference = [latitude, longitude];
 
         for (var k = 0; k < latitudes.length; k++){
-          var flag2 = false;
-          var pos_tmp = 4;
-          var pos_tmp2 = 4;
-          var pos = 24;
-          while (pos_tmp > 0 && pos_tmp <= 7){
+          var flag_col = false;
+          var col_tmp = 4;
+          var col2_tmp = 4;
+          var col_up = 0;
+          var col_down = 0;
+          var p = 24;
+
+          while (!flag_col){
             if (latitudes[k] > reference[0]){ //arriba
-              if(pos_tmp2!=pos_tmp){
-                    pos_tmp2 = pos_tmp;
-                    pos_tmp--;
-                    reference = [locs[pos - 7][0], locs[pos - 7][1]];
+              if (col_down == 0){
+                col_tmp = col2_tmp;
+                col2_tmp--;
+                reference = [locs[p-7][0], locs[p-7][1]];
+                col_up++;
               }else{
-                classifier_column(pos_tmp);
+                row_classifier(reference, col_tmp);
+                flag_col = true;
               }
+            }
 
-//              if (longitudes[k] < reference[1]){ //izquierda
-//              }
-//              else if (longitudes[k] > reference[1]){  //derecha
-//              }
-            } else{  //abajo
-
-              if(pos_tmp2!=pos_tmp){
-                  pos_tmp2 = pos_tmp;
-                  pos_tmp++;
-                  reference = [locs[pos + 7][0], locs[pos + 7][1]];
+            else if (latitudes[k] < reference[0]){  //abajo 
+              if (col_up == 0){    
+                col_tmp = col2_tmp;
+                col2_tmp++;
+                reference = [locs[p+7][0], locs[p+7][1]];
+                col_down++;
               }else{
-                classifier_column(pos_tmp);
-              }
+                row_classifier(reference, col_tmp);
+                flag_col = true;
+              }      
+            }
+          }  
+        }
+      }
 
-              
-              
+      function row_classifier(reference, col_tmp){
+        var ref = reference;
+        var flag_row = false;
+        var row_tmp = 4;
+        var row2_tmp = 4;
+        var row_left = 0;
+        var row_right = 0;
+        var q = col_tmp;
+
+        while (!flag_row){
+            if (longitudes[k] < ref[1]){ // izquierda
+              if (row_right == 0){
+                row_tmp = row2_tmp;
+                row2_tmp--;
+                ref = [locs[p-7][0], locs[p-7][1]];
+                row_left++;
+              }else{
+                // guardar ref en arreglo
+                flag_row = true;
+              }
+            }
+
+            else if (longitudes[k] > ref[1]){  // derecha 
+              if (row_left == 0){    
+                row_tmp = row2_tmp;
+                row2_tmp++;
+                ref = [locs[p+7][0], locs[p+7][1]];
+                row_right++;
+              }else{
+                // guardar ref en arreglo
+                flag_row = true;
+              }      
             }
           }
-
-        }
-       }
-       function classifier_column(reference){
-
-       }
+      }
 
 
   </script>
